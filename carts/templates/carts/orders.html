@@ -1,0 +1,76 @@
+{% extends 'shopway/base.html' %}
+{% block content %}
+{% if cart %}
+	<div class="container">
+		{% for item in cart %}
+			{% if item.total > 0.00%}
+				<div class="c-color">
+					<div class="row row-cols-1 row-cols-md-5" id="#content">
+						{% for product in item.products.all %}
+							  <div class="col mb-4" style="    display: flex;
+			    justify-content: center;">
+							    <div class="card" style="    width: 10em">
+							      <img src="{{product.image.url}}" class="card-img-top" alt="...">
+							      <div class="card-body">
+							        <h5 style="font-size: initial;
+		    font-weight: 200;" class="card-title">{{product.name}}</h5>
+							        
+							      </div>
+							      <p class="card-text" id="price"><mark>{{product.price}}</mark></p>
+							      <p><mark id="mark"><cite>- Кол-во товаров: {{product.quantity}}</cite></mark></p>
+							    </div>
+							  </div>
+
+						{% endfor %}
+					</div>
+						{{item.total}}
+						{% if user.is_superuser %}
+							{% if not item.user.is_superuser %}
+								 <p>{{item.user.email}}</p><br>
+							{% endif %}
+						{% endif %}
+				</div>
+			{% endif %}
+				
+	{% endfor %}
+	</div>
+			
+{% else %}
+<div class="container">
+		<div class="jumbotron display-4 text-center">Вы не сделали ни одного заказа</div>
+	</div>
+{% endif %}	
+<style>
+
+#mark{
+	width: 100%;
+	padding: 0;
+}
+	.c-color{
+		background: rgba(0,0,0,.15);
+		padding: 18px;
+		box-sizing: border-box;
+		border-radius: 5px;
+		border: 1px solid;
+		margin: 10px 0;
+	}
+</style>
+<script>
+jQuery(document).ready(function($) {
+    if ($( window ).width() < 991) {
+        $('#content').removeClass()
+        $('#content').addClass('row row-cols-1 row-cols-md-3')
+    }
+});
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+console.log(numberWithCommas(document.getElementById('price').textContent));
+a = document.querySelectorAll('#price');
+for (item of a){
+    console.log(item.textContent)
+    item.textContent = numberWithCommas(item.textContent) + '₽'
+    item.setAttribute('style', 'background: #ffffb2;display: flex;padding: 7px;border-radius: 5px;justify-content: center;')
+}
+</script>
+{% endblock %}

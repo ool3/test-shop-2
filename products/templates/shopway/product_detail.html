@@ -1,0 +1,108 @@
+{% extends 'shopway/base.html' %}
+{% block content %}
+
+<div class="container">
+	<div class="row">
+		<div class="col-xl-6 col-lg-7" style="display: flex; align-items: center;justify-content: center;">
+			<img id="im" src="{{details.image.url}}" alt="">
+		</div>
+	
+		<div class="col-xl-6 col-lg-3">
+		<h2>{{details.name}}</h2><p id="description">{{details.description}}</p>
+		{% if cart %}
+			<p class="btn btn-light btn-sm" disabled style="    background-color: #e7aaaa;;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    font: -webkit-small-control;
+    justify-content: center;">Товар не добавлен</p>
+		{% else %}
+			<a href="{% url 'cart' %}"><p id="cart-has" class="btn btn-light btn-sm" disabled>Товар добавлен</p></a>
+		{% endif %}
+		<p id="p"><span id="country">Страна</span>&nbsp; {{details.country}}</p><br>
+		<p id="p" class="gold"><span id="country">Цена </span><span id="price">&nbsp;{{details.price}}</span></p><br>
+		<a href="#" id="back" class="btn btn-primary">
+   	<i class="fa fa-undo">назад</i>
+		</a>
+	
+	</div>
+	</div>
+</div>
+	
+<style>
+	.gold{
+		background: gold!important;
+		border: 1px solid black;
+	}
+@media screen and (max-width: 1199px){
+	h2{
+		font-size: 1.5rem;
+	}
+}
+	#im{
+		margin-bottom: 4%
+	}
+	span#country:after{
+	  content: "->";
+	  vertical-align: top;
+	  margin-left: 5px;
+
+	}
+	#p{
+		margin-bottom: 1rem;
+		display: flex;
+		/* float: right; */
+		background: gainsboro;
+		padding: 10px;
+		border-radius: 5px;
+		justify-content: center;
+		border: 1px solid black;
+	}
+
+@media(max-width: 991px){
+	h2{
+		font-size: 2rem;
+		margin-bottom: 4%;
+		text-align: center;
+	}
+	#p{
+		font-size: 14px;
+		justify-content: center;
+		width: 100%;
+	}
+}
+@media screen  and (max-width: 1024px){
+	.btn-primary{
+		width: 100%;
+	}
+}
+@media (min-width: 768px){
+	.col-md-12 {
+		flex: 0 0 100%;
+		max-width: 100%;
+		display: flex;
+		flex-direction: column;
+		text-align: center;
+}
+}
+</style>
+<script>
+	if ($('#buttonAdd').clicked == true){
+		$('#back').on('click', function(){
+			window.history.go(-2);
+	});
+	}else{
+		$('#back').on('click', function(){
+			window.history.go(-1);
+	});
+	}
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+a = document.querySelectorAll('#price');
+for (item of a){
+    console.log(item.textContent)
+    item.textContent = numberWithCommas(item.textContent) + '₽'
+}
+</script>
+{% endblock %}

@@ -1,0 +1,163 @@
+{% extends 'shopway/base.html' %}
+{% block content %}
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" class="btn btn-warning">&laquo; в начало</a>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <a class="btn btn-light" href="?page={{num}}">{{num}}</a>
+                {% elif num > page_obj.number|add:'-8' and num < page_obj.number|add:'8' %}
+                <a class="btn btn-outline-light" href="?page={{num}}">{{num}}</a>
+            {% endif %}
+        {% endfor %}
+
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-warning">в конец &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+{% if products %}
+    <div class="container-fluid">
+        <div class="row row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
+        {% for pr in products %}
+            {% if pr.image %}
+            <div class="col" style="display: flex;
+            justify-content: center;">
+                <div class="card">
+                    <a href="{% url 'product_detail' pr.slug %}" id="btn">
+                    <div class="black-background">
+                        <div class="black-text">Смотреть</div>
+                        <img src="{{pr.image.url}}" data-src="{{pr.image.url}}" style="height: 100%!important;object-fit: contain;"  class="lazyload card-img-top" alt="{{pr.image}}">
+                    </div>
+                </a>
+                <div class="card-body">
+                    <small>{{pr.country}}</small>
+                    <h5 class="card-title">{{pr.name}}</h5>
+                </div>
+                    <p class="card-text" id="price"><mark>{{pr.price}}</mark></p>
+                        </form>
+                    <a href="{% url 'update_cart' pr.slug %}" id='btn-href'><button id="Add" class="btn btn-light">В корзину</button></a>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+        </div>
+    </div>
+{% endif%}
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" class="btn btn-warning">&laquo; в начало</a>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <a class="btn btn-light" href="?page={{num}}">{{num}}</a>
+                {% elif num > page_obj.number|add:'-8' and num < page_obj.number|add:'8' %}
+                <a class="btn btn-outline-light" href="?page={{num}}">{{num}}</a>
+            {% endif %}
+        {% endfor %}
+
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-warning">в конец &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+<style>
+.black-text{
+    color: white;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    opacity: 0.5;
+    transform: translate(-50%, -50%);
+    z-index: -3;
+}
+.card-img-top{
+        height: 100%!important;
+    }
+.black-background{
+    background-color: rgb(80, 71, 71);
+    z-index: 20;
+    border-radius: 5px;
+    position: relative;
+}
+.block-text{
+    opacity: 1;
+}
+img.card-img-top.ls-is-cached.lazyloaded{
+    transition: 1s;
+}
+img.card-img-top.ls-is-cached.lazyloaded:hover{
+    opacity: 0.1;
+
+}
+.back-top-top{
+    position: fixed;
+    right: 10px;
+    bottom: 200px;
+    width: 50px;
+    height: 50px;
+    border: 1px solid red;
+    border-radius: 50%;
+    background: yellow;
+    border-color: transparent;
+}
+#btn-href{
+    display: flex;
+    justify-content: center;
+}
+.current{
+    color: aliceblue;
+}
+@media screen and (max-width: 991px){
+    .card-img-top{
+        object-fit: contain!important;
+    }
+}
+#Add{
+    width: 100%;
+}
+#btn{
+    display: flex;
+    justify-content: center;
+}
+#btn:hover, #btn-href:hover{
+    text-decoration: none;
+}
+.pagination{
+	display: flex;
+	text-align: center;
+	justify-content: center;
+	margin-top: 0px;
+	margin-bottom: 20px;
+}
+.step-links{
+	background: #948b6f ;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: inset 0 0 5px 2px black;
+    width: auto;
+}
+#readMore{
+    width: 80%;
+}
+</style>
+<script>
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+console.log(numberWithCommas(document.getElementById('price').textContent));
+a = document.querySelectorAll('#price');
+for (item of a){
+    console.log(item.textContent)
+    item.textContent = numberWithCommas(item.textContent) + '₽'
+    item.setAttribute('style', 'background: #ffffb2;display: flex;padding: 7px;border-radius: 5px;justify-content: center;')
+}
+
+</script>
+{% endblock %}

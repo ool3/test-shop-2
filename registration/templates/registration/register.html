@@ -1,0 +1,49 @@
+{% extends 'shopway/base.html'%}
+{% block content %}
+<div class="container">
+	<div class="row">
+		<div class="col register" id="reg">
+			<h3 class="title_registration">Регистрация</h3>
+			<form action="{% url 'register' %}" method='post'>
+			    {% csrf_token %}
+			    {{form_register.as_p}}
+			    <input id="one" class="input_right light" type="submit" value="Submit" />
+			</form>
+			<a href="{% url 'login' %}">Я уже зарегестрирован.</a>
+		</div>
+</div>
+<style>
+	.register{
+		background: beige;
+	    padding: 12px;
+	    box-sizing: border-box;
+	    border-radius: 5px;
+	}
+	.input_right{
+		display: inline-flex;
+		float: right;
+		padding: 10px;
+	}
+	.light{
+	    padding: 7px;
+	    background: #f6f6f6;
+	    border: 1px solid;
+	    transition: 1s ease;
+	}
+	.light:hover{
+		background-color: #dbd8d8;
+		transform: rotate(360deg);
+	}
+	.title_registration{
+		display: flex;
+		justify-content: center;
+	}
+	.login{
+		background-color: #bfceb0;;
+		padding: 12px;
+	    box-sizing: border-box;
+	    border-radius: 5px;
+	    margin-left: 10px;
+	}
+</style>
+{% endblock %}

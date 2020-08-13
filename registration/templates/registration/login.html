@@ -1,0 +1,60 @@
+{% extends 'shopway/base.html' %}
+{% block content %}
+<div class="container">
+	
+
+	<div class="row">
+				<div class="col login" id="login">
+				<h3 class="title_registration">Вход</h3>
+					<form action="{% url 'login' %}" method='post'>
+					    {% csrf_token %}
+						    <label>Имя пользователя</label>
+						    <input name="username" class="form-control" type="text">
+						    <label>Пароль</label>
+						    <input name="password" class="form-control" type="text">
+					    {{form.errors}}
+				    <input id="two" class="input_right light" type="submit" value="Submit" />
+				</form>
+			</div>
+		</div>
+	</div>	
+</div>
+<style>
+	#two{
+		margin-top: 15px;
+	}
+	.register{
+		background: beige;
+	    padding: 12px;
+	    box-sizing: border-box;
+	    border-radius: 5px;
+	}
+	.input_right{
+		display: inline-flex;
+		float: right;
+		padding: 10px;
+	}
+	.light{
+	    padding: 7px;
+	    background: #f6f6f6;
+	    border: 1px solid;
+	    transition: 1s ease;
+	}
+	.light:hover{
+		background-color: #dbd8d8;
+		transform: rotate(360deg);
+	}
+	.title_registration{
+		display: flex;
+		justify-content: center;
+	}
+	.login{
+		background-color: #bfceb0;;
+		padding: 12px;
+	    box-sizing: border-box;
+	    border-radius: 5px;
+	    margin-left: 10px;
+	}
+</style>
+
+{% endblock %}

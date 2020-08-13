@@ -1,0 +1,37 @@
+#im{
+    width: 500px;
+    border: 1px solid black;
+    object-fit: cover;
+    height: 500px;
+}
+
+.btn-dark{
+    height: 10%;
+}
+p#cart-has{
+    background-color: #f7f7f7;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    font: -webkit-small-control;
+    justify-content:center;
+    }
+
+@media(max-width: 991px){
+    p#cart-has{
+    display: none;
+}
+}
+#description{
+    font-size: 20px;
+    align-self: center;
+    width: 48%;
+    display: inline;
+}
+
+#buttonAdd{
+    justify-content: center;
+    display: flex;
+    height: 8%;
+    align-items: center;
+}

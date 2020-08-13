@@ -1,0 +1,85 @@
+{% extends 'shopway/base.html' %}
+{% block content %}
+{% if user.is_authenticated %}
+	<div class="d-cont">
+		{% if cart.products.all %}
+		<table class="table table-bordered table-dark">
+			  <thead>
+			    <tr>
+			      <th class="text-center" scope="col">#</th>
+			      <th class="text-center" scope="col">Имя товара</th>
+			      <th class="text-center" scope="col">Цена</th>
+			      <th class="text-center" scope="col">Количество</th>
+			    </tr>
+			  </thead>
+			{% for item in cart.products.all %}
+			
+			  <tbody>
+			    <tr>
+			      <th class="text-center" scope="row"><a class="btn btn-outline-light" href="{% url 'remove_cart' item.slug %}">Delete</a></th>
+			      <td class="text-center">{{item}}</td>
+			      <td class="text-center" id="price">{{item.price}}</td>
+			      <td class="text-center">{{item.quantity}}</td>
+			      <td class="text-center">
+					<form method="post" action="{% url 'click_value' item.slug %}">
+						{% csrf_token %}
+						<div class="btn-group text-uppercase">
+							<input type="submit" value="−" class="btn btn-light" name="_down">
+							<input type="submit" value="+" class="btn btn-light" name="_up">
+							
+						</div>
+					</form>
+
+			      </td>
+			    </tr>
+			  </tbody>
+			 {% endfor %}
+			 <tr>
+		      <td class="text-center" colspan="2">Total</td>
+		      <td id="price" colspan="3" class="text-center">{{total}}</td>
+		    </tr>
+			</table>
+			<form action="{% url 'send_order' %}" method="POST">
+				{% csrf_token %}
+				<input type="submit" value="Отправить заказ" class="btn btn-light" name="submit_btn">
+				
+			</form>
+
+		{% else %}
+			<div class="jumbotron bg-red">
+				<div class="display-4 text-center">Корзина пуста</div>
+			</div>
+		{% endif %}
+		
+		
+		
+	</div>
+{% else %}
+<div class="container">
+	<div class="jumbotron bg-red">
+			<div class="display-4 text-center">Вы не зарегестрированны!</div>
+	</div>
+</div>
+{% endif %}
+<style>
+	.d-cont{
+		max-width: 1340px;
+	    width: 100%;
+	    padding-right: 15px;
+	    padding-left: 15px;
+	    margin-right: auto;
+	    margin-left: auto;
+	}
+</style>
+<script>
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+console.log(numberWithCommas(document.getElementById('price').textContent));
+a = document.querySelectorAll('#price');
+for (item of a){
+    console.log(item.textContent)
+    item.textContent = numberWithCommas(item.textContent) + '₽'
+}
+</script>
+{% endblock %}

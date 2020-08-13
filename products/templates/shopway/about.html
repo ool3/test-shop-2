@@ -1,0 +1,185 @@
+{% extends 'shopway/base.html' %}
+{% block content %}
+<div class="container">
+    <div class="d-cont">
+        <h2 class="sec-header text-center" style="margin-top: 10px;">Статистика компании</h2>
+    </div>
+</div>
+
+<div class="section-counter" id="counts">
+    <div class="container align-counter">
+            <div class="col counter-main">
+                <div class="col counter-element">
+                    <span class="count" data-target="{{all}}"></span>
+                </div>
+            </div>  
+            <div class="col counter-main">
+                <div class="col counter-element">
+                    <span class="count" data-target="24"></span>
+                </div>
+            </div> 
+            <div class="col counter-main">
+                <div class="col counter-element">
+                    <span class="count" data-target="2"></span>
+                </div>
+            </div>
+    </div>
+</div>
+</div>
+<div class="section-counter" id="counts">
+    <div class="container align-counter">
+            <div class="col-4 text-center">
+                    Кол-во товаров на сайте.
+
+            </div>  
+            <div class="col-4 text-center">
+                Среднее кол-во заказов за неделю.
+            </div> 
+            <div class="col-4 text-center">
+                Кол-во сотрудников компании.
+            </div>
+    </div>
+</div>
+<div class="container">
+    <div class="d-cont">
+        <h2 class="sec-header text-center">Наше расположение</h2>
+    </div>
+</div>
+<div class="container">
+    <div class="map">
+        <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Aced6c7552e4a517f130edf56535861f843b84de94d0ab67fbe53f2d36d731b2d&amp;width=100%25&amp;height=355&amp;lang=ru_RU&amp;scroll=true"></script>
+    </div>
+    <p class="map-place">Нахимовский просп., 24, стр. 1, Москва, Россия</p>
+    
+</div>
+
+<style>
+    .map-place{
+        font-size: 30px;
+        font-family: monospace;
+        margin: 30px 0;
+        text-align: center;
+    }
+    .counter-main{
+        align-items: center;
+        justify-content: center;
+        display: flex;
+        text-align: center;
+    }
+    .col {
+        flex-grow: 0;
+        text-align: center;
+    }
+    .align-counter{
+        display: flex;
+        justify-content: space-around;
+    }
+    body{
+        overflow-x: hidden;
+    }
+    .section-counter{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+    .counter-element{
+        border: 1px solid black;
+        padding: 20px;
+        display: inline-flex;
+        transform: rotate(50deg);
+        transition: 1s;
+    }
+    .counter-element:hover{
+        transform: rotate(410deg) scale(1.5);
+        text-shadow: 1px 2px 2px black;
+    }
+    .count{
+        transform: rotate(-50deg);
+        transition: 1s;
+    }
+    .sec-header{
+    font-size: 22px;
+    color: #4b4a4d;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    margin: 40px 0;
+    text-transform: uppercase;
+    font-weight: 400;
+    }
+.sec-header:before{
+    margin: 0 0 0 -50%;
+    content: "";
+    position: relative;
+    display: inline-block;
+    width: 50%;
+    height: 1px;
+    vertical-align: middle;
+    background: #0d3051;
+    background-clip: content-box;
+    margin-right: 10px;
+}
+.sec-header:after{
+  left: 1em;
+  content: "";
+  margin: 0 -50% 0 0;
+  position: relative;
+  display: inline-block;
+  width: 50%;
+  height: 1px;
+  vertical-align: middle;
+  background: #0d3051;
+  background-clip: content-box;
+  margin-left: -13px;
+}
+</style>
+<script>
+    colors();
+$(document).ready(function(){
+    const counters = document.querySelectorAll('.count')
+    counters.forEach((counter) => {
+        counter.innerHTML = '0';
+        const updateCounter = () =>{
+            const target = +counter.getAttribute('data-target')
+            const c = +counter.innerText;
+            if (c < target){
+                counter.innerText = c + 1;
+                setTimeout(updateCounter, 1)
+            }else{
+                counter.innerText = target
+                
+            }
+        }
+        updateCounter()
+})
+})
+function colors() {
+    var body = document.getElementsByTagName("body")[0];
+    var cont = document.querySelectorAll('.count');
+    var clr = new Array () 
+    clr[0] = "#CC0000";
+    clr[1] = "#CCCC00";
+    clr[2] = "#009933";
+    clr[3] = "#330066";
+    clr[4] = "#663333";
+    var i = 0;
+    var a = setInterval ( function() {
+        for (let item of cont){
+            i++;
+            item.style.color = clr [i];
+            
+            if ( i == 4 ) {
+            i = 0;
+            
+            }
+        }
+        
+        },1000);
+    
+}
+colors();
+</script>
+
+{% endblock %}

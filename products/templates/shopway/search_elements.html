@@ -1,0 +1,125 @@
+{% extends 'shopway/base.html' %}
+{% block content %}
+{% if products%}
+<div class="container-fluid">
+  <div id="content" class="row row-cols-1 row-cols-md-5">
+  {% for pr in products %}
+    <div class="col" style="    display: flex;
+    justify-content: center;">
+      <div class="card">
+        <img style="height: 280px;
+    object-fit: contain;
+" data-src="{{pr.image.url}}" class="lazyload card-img-top" alt="{{pr.image.url}}">
+        <div class="card-body">
+            <small>{{pr.country}}</small>
+          <h5 class="card-title">{{pr.name}}</h5>
+        </div>
+            <p class="card-text" id="price"><mark>{{pr.price}}</mark></p>
+          <a href="{% url 'product_detail' pr.slug %}" id="btn"><button id="readMore" style="height: 100%;" class="btn btn-dark">Read More</button></a>
+          </form>
+          <a href="{% url 'update_cart' pr.slug %}" id='btn-href'><button id="Add" class="btn btn-light">Add</button></a>
+      </div>
+    </div>  
+  {% endfor %}
+  </div>
+</div>
+{% else %}
+<div class="d-cont">
+    <h2 class="sec-header">Мы не можем найти "{{q}}"</h2></div>
+{% endif %}
+
+<style>
+.sec-header{
+  font-size: 22px;
+    color: red;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    margin: 30px 0;
+    text-transform: uppercase;
+    font-weight: 400;
+}
+.sec-header:before{
+  margin: 0 0 0 -50%;
+  content: "";
+  position: relative;
+  display: inline-block;
+  width: 50%;
+  height: 1px;
+  vertical-align: middle;
+  background: #c13636;
+  background-clip: content-box;
+  margin-right: 10px;
+}
+.sec-header:after{
+  left: 1em;
+  content: "";
+  margin: 0 -50% 0 0;
+  position: relative;
+  display: inline-block;
+  width: 50%;
+  height: 1px;
+  vertical-align: middle;
+  background: #c13636;
+  background-clip: content-box;
+  margin-left: -13px;
+}
+#btn-href{
+    display: flex;
+    justify-content: center;
+}
+#Add{
+    width: 100%;
+}
+#btn{
+    display: flex;
+    justify-content: center;
+}
+#btn:hover, #btn-href:hover{
+    text-decoration: none;
+}
+.pagination{
+	display: flex;
+	text-align: center;
+	justify-content: center;
+	margin-top: 0px;
+	margin-bottom: 20px;
+}
+.step-links{
+	background: aliceblue;
+    padding: 10px;
+    border-radius: 10px;
+}
+#readMore{
+    width: 80%;
+}
+</style>
+<script>
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+console.log(numberWithCommas(document.getElementById('price').textContent));
+a = document.querySelectorAll('#price');
+for (item of a){
+    console.log(item.textContent)
+    item.textContent = numberWithCommas(item.textContent) + '₽'
+    item.setAttribute('style', 'background: #ffffb2;display: flex;padding: 7px;border-radius: 5px;justify-content: center;')
+}
+jQuery(document).ready(function($) {
+    if ($( window ).width() < 1174) {
+        $('#content').removeClass()
+        $('#content').addClass('row row-cols-1 row-cols-md-3')
+    }else if ($( window ).width() < 1475){
+        $('#content').removeClass()
+        $('#content').addClass('row row-cols-1 row-cols-md-4')
+    }
+});
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+console.log(numberWithCommas(document.getElementById('price').textContent));
+</script>
+</script>
+{% endblock %}
