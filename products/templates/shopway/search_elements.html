@@ -1,23 +1,45 @@
 {% extends 'shopway/base.html' %}
+{% block title%}{{block.super}} -> {{q}}{% endblock %}
 {% block content %}
 {% if products%}
+<div class="pagination">
+    <span class="step-links">
+        {% if contacts.has_previous %}
+            <a href="?page=1" class="btn btn-warning">&laquo; в начало</a>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+            {% if contacts.number == num %}
+                <a class="btn btn-light" href="?page={{num}}">{{num}}</a>
+                {% elif num > contacts.number|add:'-8' and num < contacts.number|add:'8' %}
+                <a class="btn btn-outline-light" href="?page={{num}}">{{num}}</a>
+            {% endif %}
+        {% endfor %}
+
+
+        {% if contacts.has_next %}
+            <a href="?page={{ contacts.paginator.num_pages }}" class="btn btn-warning">в конец &raquo;</a>
+        {% endif %}
+    </span>
+</div>
 <div class="container-fluid">
-  <div id="content" class="row row-cols-1 row-cols-md-5">
+  <div id="content" class="row row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
   {% for pr in products %}
-    <div class="col" style="    display: flex;
+    <div class="col" style="display: flex;
     justify-content: center;">
       <div class="card">
-        <img style="height: 280px;
-    object-fit: contain;
-" data-src="{{pr.image.url}}" class="lazyload card-img-top" alt="{{pr.image.url}}">
+        <a href="{% url 'product_detail' pr.slug %}" id="btn">
+          <div class="black-background">
+              <div class="black-text">Смотреть</div>
+              <img data-src="{{pr.image.url}}" style="height: 100%!important;object-fit: contain;"  class="lazyload card-img-top" alt="{{pr.image}}">
+          </div>
+      </a>
         <div class="card-body">
             <small>{{pr.country}}</small>
           <h5 class="card-title">{{pr.name}}</h5>
         </div>
             <p class="card-text" id="price"><mark>{{pr.price}}</mark></p>
-          <a href="{% url 'product_detail' pr.slug %}" id="btn"><button id="readMore" style="height: 100%;" class="btn btn-dark">Read More</button></a>
           </form>
-          <a href="{% url 'update_cart' pr.slug %}" id='btn-href'><button id="Add" class="btn btn-light">Add</button></a>
+          <a href="{% url 'update_cart' pr.slug %}" id='btn-href'><button id="Add" class="btn btn-light">В корзину</button></a>
       </div>
     </div>  
   {% endfor %}
@@ -29,6 +51,32 @@
 {% endif %}
 
 <style>
+.black-text{
+    color: white;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    opacity: 0.5;
+    transform: translate(-50%, -50%);
+    z-index: -3;
+}
+.card-img-top{
+        height: 100%!important;
+    }
+.black-background{
+    background-color: rgb(80, 71, 71);
+    z-index: 20;
+    border-radius: 3px;
+    position: relative;
+}
+
+img.card-img-top.ls-is-cached.lazyloaded{
+    transition: 1s;
+}
+img.card-img-top.ls-is-cached.lazyloaded:hover{
+    opacity: 0.1;
+
+}
 .sec-header{
   font-size: 22px;
     color: red;
@@ -99,27 +147,14 @@
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
-console.log(numberWithCommas(document.getElementById('price').textContent));
 a = document.querySelectorAll('#price');
 for (item of a){
-    console.log(item.textContent)
     item.textContent = numberWithCommas(item.textContent) + '₽'
     item.setAttribute('style', 'background: #ffffb2;display: flex;padding: 7px;border-radius: 5px;justify-content: center;')
 }
-jQuery(document).ready(function($) {
-    if ($( window ).width() < 1174) {
-        $('#content').removeClass()
-        $('#content').addClass('row row-cols-1 row-cols-md-3')
-    }else if ($( window ).width() < 1475){
-        $('#content').removeClass()
-        $('#content').addClass('row row-cols-1 row-cols-md-4')
-    }
-});
-
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
-console.log(numberWithCommas(document.getElementById('price').textContent));
 </script>
 </script>
 {% endblock %}

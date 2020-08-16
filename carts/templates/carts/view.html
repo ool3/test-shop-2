@@ -1,8 +1,9 @@
 {% extends 'shopway/base.html' %}
+{% block title%}{{block.super}} -> basket{% endblock %}
 {% block content %}
 {% if user.is_authenticated %}
 	<div class="d-cont">
-		{% if cart.products.all %}
+		{% if cart %}
 		<table class="table table-bordered table-dark">
 			  <thead>
 			    <tr>
@@ -12,14 +13,18 @@
 			      <th class="text-center" scope="col">Количество</th>
 			    </tr>
 			  </thead>
-			{% for item in cart.products.all %}
-			
+			{% for item in cart %}
 			  <tbody>
 			    <tr>
 			      <th class="text-center" scope="row"><a class="btn btn-outline-light" href="{% url 'remove_cart' item.slug %}">Delete</a></th>
 			      <td class="text-center">{{item}}</td>
-			      <td class="text-center" id="price">{{item.price}}</td>
-			      <td class="text-center">{{item.quantity}}</td>
+				  <td class="text-center" id="price">{{item.price}}</td>
+				  <td class="text-center">
+				  {% for i in q %}
+					{% if i.product == item %}
+						{{i.quantity}}
+					{% endif%}
+				  {% endfor %}</td>
 			      <td class="text-center">
 					<form method="post" action="{% url 'click_value' item.slug %}">
 						{% csrf_token %}
@@ -36,12 +41,12 @@
 			 {% endfor %}
 			 <tr>
 		      <td class="text-center" colspan="2">Total</td>
-		      <td id="price" colspan="3" class="text-center">{{total}}</td>
+		      <td id="price" colspan="3" class="text-center">{{item_total}}</td>
 		    </tr>
 			</table>
 			<form action="{% url 'send_order' %}" method="POST">
 				{% csrf_token %}
-				<input type="submit" value="Отправить заказ" class="btn btn-light" name="submit_btn">
+				<input type="submit" value="Отправить заказ" class="btn btn-light mb-3" name="submit_btn">
 				
 			</form>
 

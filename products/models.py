@@ -12,6 +12,8 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+
+
 class Product(models.Model):
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(max_length=200, db_index=True, null=True, default='default')
@@ -20,7 +22,6 @@ class Product(models.Model):
     country = models.CharField(max_length=200, blank=True, null=True)
     price = models.PositiveIntegerField(null=True)
     stock = models.PositiveIntegerField(null=True)
-    quantity = models.IntegerField(default=1, null=True)
     available = models.BooleanField(default=True, null=True)
     created = models.DateTimeField(auto_now_add=True, null=True)
     updated = models.DateTimeField(auto_now=True, null=True)
@@ -33,7 +34,14 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+class Quantity(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True)
+    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1, null=True)
 
+    def __str__(self):
+        return '{} - {}'.format(self.user.username, self.quantity)
+        
 class Item(models.Model):
     product = models.ManyToManyField(Product)
     quantity = models.IntegerField(default=1, null=True)

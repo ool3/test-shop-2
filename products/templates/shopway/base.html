@@ -2,7 +2,7 @@
 {% load static %}
 <html>
 <head>
-	<title></title>
+	<title>{% block title%}Alex Company{% endblock %}</title>
 	<link rel="stylesheet" href="{% static 'css/product_detail.css'%}">
 	<link rel="stylesheet" href="{% static 'css/navbar.css'%}">
 	<link rel="stylesheet" href="{% static 'css/card.css'%}">
@@ -10,6 +10,7 @@
 	<link rel="stylesheet" href="{% static 'css/total.css'%}">
 	<link rel="stylesheet" href="{% static 'css/home.css'%}">
 	<link rel="stylesheet" href="{% static 'css/basket.css'%}">
+	<link rel="shortcut icon" href="{% static 'img/adwords.png' %}" type="image/png">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 	<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
 	<script src='http://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js'></script>
@@ -28,10 +29,12 @@
 	{% include 'shopway/includes/navbar.html' %}
 	</div>
 	<div class="data-content">
+		<a class="scroll-to-top ROUND_GREY PADDING visible" href="#" id="scrollToTop"></a>
 		{% block content %}
 		{% endblock %}
+		
 	</div>
-
+	
 	<footer class="footer">
 		<div class="container">
 			<div class="footer-edit">
@@ -39,19 +42,78 @@
 					<script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A27c21d9529a39d480205a64ef2c828448f49c3f696a3d796225c1d714f6fffab&amp;width=368&amp;height=270&amp;lang=ru_RU&amp;scroll=true"></script>
 				</div>
 				<div class="about">
-					<div class="col">Почта</div>
-					<div class="col">Телефон</div>
-					<div class="col">watsapp</div>
+					<div class="col">Почта:<a href="mailto:didi69@mail.ru">didi69@mail.ru</a></div>
+					<div class="col">Телефон:<a href='tel:+79032364006'>+7(903)236-40-06</a></div>
 				</div>
 			</div>
 		</div>
 	</footer>
 </div>
+
 </body>
 <style>
 	body{
 		overflow-x: hidden;
 	}
+.about .col a{
+	color: rebeccapurple;
+	text-decoration: none;
+	transition: .6s ease-in-out all;
+}
+.about .col a:hover{
+	color: blue;
+}
+.about{
+	display: flex;
+	flex-direction: column;
+}
+a#scrollToTop::after, a#scrollToTop::before{
+	content: '';
+	height: 1px;
+	width: 10px;
+	color: red;
+	z-index: 1000;
+	background-color: red;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transition: 1s ease-in-out;
+}
+a#scrollToTop::after{
+	transform: translate(-81%, -50%) rotate(65deg);
+}
+a#scrollToTop::before{
+	transform: translate(-32%, -50%) rotate(115deg);
+}
+a#scrollToTop.active::after{
+	transform: translate(-32%, -50%) rotate(68deg);
+}
+a#scrollToTop.active::before{
+	transform: translate(-62%, -50%) rotate(108deg);
+	
+}
+a#scrollToTop{
+	opacity: 0;
+	
+    display: none;
+    position: fixed;
+    text-align: center;
+    text-decoration: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    right: 5%;
+    left: inherit;
+    top: 85%;
+    /* bottom: 84px; */
+    z-index: 95;
+    background-color: #b4a6a6;
+    cursor: pointer;
+    transition: 1s ease-in-out all;
+}
+a#scrollToTop:hover{
+	    box-shadow: inset 0px 0px 7px 0px black;
+}
 .page{
 	overflow-x: hidden;
 	display: flex;
@@ -64,10 +126,7 @@
 .map{
 	box-shadow: 1px 1px 5px black;
 }
-.data-content{
-	margin-top: 40px;
-	margin-bottom: 40px;
-}
+
 .footer{
 	background-color: #f8f8f8;
 	overflow-x: hidden;
@@ -129,7 +188,6 @@
 			    moveRight();
 			}, 3000);
 		}else{
-			console.log('stop')
 			clearInterval(a)
 		}
 	
@@ -173,6 +231,29 @@
     });
 
 });
+let topper = document.getElementById('scrollToTop')
+topper.addEventListener('mouseover', function(){
+	this.classList.add('active')
+	console.log(this)
+})
+topper.addEventListener('mouseout', function(){
+	this.classList.remove('active')
+	console.log(this)
+})
+$(document).ready(function(){
+	$(window).scroll(function(){
+		if($(this).scrollTop() > 100){
+			$('#scrollToTop').css('display', 'block')
+			$('#scrollToTop').css('opacity', '1')
+		}else{
+			$('#scrollToTop').css('display', 'none')
+			$('#scrollToTop').css('opacity', '0')
+		}
+	});
+	$('#scrollToTop').click(function(){
+		$('html,body').animate({scrollTop: 0}, 'slow');
+	});
+})
 
 </script>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>

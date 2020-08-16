@@ -1,15 +1,24 @@
 {% extends 'shopway/base.html' %}
+{% block title%}{{block.super}} -> Orders{% endblock %}
 {% block content %}
 {% if cart %}
 	<div class="container">
 		{% for item in cart %}
 			{% if item.total > 0.00%}
-				<div class="c-color">
-					<div class="row row-cols-1 row-cols-md-5" id="#content">
+			<div class="{% if item.done %} done {%endif%}">
+				{% if item.done %}
+					<p class="absolute-text-success">Заказ Выполнен</p>
+				{% endif %}
+				<div class="c-color {% if item.done %} color-opacity {%endif%}">
+					
+					<div class="font-italic">-{{ item.updated|date:"j E Y" }}</div>
+					<div class="row row-cols-md-3 row-cols-lg-5">
 						{% for product in item.products.all %}
+						
 							  <div class="col mb-4" style="    display: flex;
-			    justify-content: center;">
-							    <div class="card" style="    width: 10em">
+				justify-content: center;">
+								
+							    <div class="card" style="width: 10em">
 							      <img src="{{product.image.url}}" class="card-img-top" alt="...">
 							      <div class="card-body">
 							        <h5 style="font-size: initial;
@@ -17,19 +26,42 @@
 							        
 							      </div>
 							      <p class="card-text" id="price"><mark>{{product.price}}</mark></p>
-							      <p><mark id="mark"><cite>- Кол-во товаров: {{product.quantity}}</cite></mark></p>
+							      <p><mark id="mark"><cite>- Кол-во товаров:
+									{% for d in item.q.all %}
+										{% if d.user == item.user and d.product == product%}
+											{{d.quantity}}
+										{% endif %}
+									{% endfor %}</cite></mark></p>
 							    </div>
 							  </div>
-
 						{% endfor %}
 					</div>
-						{{item.total}}
+					
+						<p class="price">{{item.total}}</p>
 						{% if user.is_superuser %}
 							{% if not item.user.is_superuser %}
-								 <p>{{item.user.email}}</p><br>
+								{% for phone in phones %}
+									{% if phone.username == item.user.username %}
+										<p>Телефон: {{phone.phone}}</p>
+										<p>Почта: {{item.user.email}}</p>
+									{% endif %}
+								{% endfor %}
 							{% endif %}
+							<div class="btn-group">
+								<form action="{% url 'done_cart' item.id %}">
+									<input type="submit" class="btn btn-success" value="Заказ выполнен">
+								</form>
+								<form action="{% url 'delete_cart' item.id %}">
+									<input type="submit" class="btn btn-danger" value="Удалить">
+								</form>
+						</div>
+						{% else %}
+							<form action="{% url 'delete_cart' item.id %}" id="del-cart">
+								<input type="submit" class="btn btn-danger" value="Удалить">
+							</form>
 						{% endif %}
 				</div>
+			</div>
 			{% endif %}
 				
 	{% endfor %}
@@ -41,36 +73,68 @@
 	</div>
 {% endif %}	
 <style>
-
+.done{
+	position: relative;
+	border-radius: 5px;
+}
+.absolute-text-success{
+	position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 400;
+    font-size: xx-large;
+    background: #94df93b5;
+    padding: 10px;
+    border-radius: 5px;
+}
+#del-cart{
+	display: flex;
+    /* top: 35px; */
+    margin-top: -32px;
+    flex-direction: row-reverse;
+}
 #mark{
 	width: 100%;
 	padding: 0;
 }
-	.c-color{
-		background: rgba(0,0,0,.15);
-		padding: 18px;
-		box-sizing: border-box;
-		border-radius: 5px;
-		border: 1px solid;
-		margin: 10px 0;
+.color-opacity{
+	opacity: 0.5;
+}
+.c-color{
+	background: rgba(0,0,0,.15);
+	padding: 18px;
+	box-sizing: border-box;
+	border-radius: 5px;
+	border: 1px solid;
+	margin: 10px 0;
+	transition: 0.5s ease-in-out;
+}
+.c-color:hover{
+	box-shadow: inset 0 0 3px 0px black;
+}
+@media(max-width:  991px){
+	img.card-img-top{
+		object-fit: contain!important;
 	}
+}
+.done{
+	background-color: #94df93b5;
+}
 </style>
 <script>
-jQuery(document).ready(function($) {
-    if ($( window ).width() < 991) {
-        $('#content').removeClass()
-        $('#content').addClass('row row-cols-1 row-cols-md-3')
-    }
-});
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 console.log(numberWithCommas(document.getElementById('price').textContent));
 a = document.querySelectorAll('#price');
 for (item of a){
-    console.log(item.textContent)
     item.textContent = numberWithCommas(item.textContent) + '₽'
     item.setAttribute('style', 'background: #ffffb2;display: flex;padding: 7px;border-radius: 5px;justify-content: center;')
+}
+a = document.querySelectorAll('.price');
+for (item of a){
+    item.textContent = numberWithCommas(item.textContent) + '₽'
 }
 </script>
 {% endblock %}

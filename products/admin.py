@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product
+from .models import Category, Product,Quantity
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -14,8 +14,9 @@ class ProductAdmin(admin.ModelAdmin):
 	date_hierarchy = 'created'
 	# readonly_fileds = ['updated', 'updated']
 	search_fields = ['name', 'slug', 'price']
-	list_display = ['name', 'slug', 'price', 'stock', 'available','quantity',  'country']
+	list_display = ['name', 'slug', 'price', 'stock', 'available', 'country']
 	list_filter = ['available', 'country'] # filter components
-	list_editable = ['price','slug', 'stock', 'quantity', 'available'] # edit
+	list_editable = ['price','slug', 'stock', 'available'] # edit
 	prepopulated_fields = {'slug': ('name',)}
 admin.site.register(Product, ProductAdmin)
+admin.site.register(Quantity)

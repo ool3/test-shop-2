@@ -2,12 +2,15 @@ from django.shortcuts import render, HttpResponseRedirect, get_object_or_404
 from django.urls import reverse
 # Create your views here.
 from .models import Cart
-from products.models import Product, Category
+from products.models import Product, Category, Quantity
 from django.http import HttpResponse, HttpResponseRedirect
 import requests
 from bs4 import BeautifulSoup as BS
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from registration.models import PhoneUser
 # Create your views here.
+@login_required
 def view(request):
 	# for x in range(1, 14):
 	# 	r = requests.get(f'https://eco-dush.ru/brands/armani-roca/?PAGEN_1={x}&SIZEN_1=36').text
@@ -31,39 +34,75 @@ def view(request):
 	try:
 		a = Cart.objects.get_or_create(user=request.user)
 		cart = Cart.objects.filter(user=request.user).last()
-		item = cart.products.count()
-		i = int(cart.total)
+		item = cart.products.all()
+		all_price = 0
+		for i in item:
+			all_price += Quantity.objects.filter(user=request.user, product=i).last().quantity
+		lol = int(cart.total)
+
+		# Quantity.objects.get_or_create(user=request.user)
+		list_q = []
+		for i in item:
+			q = Quantity.objects.filter(user=request.user, product=i).last()
+			print(q)
+			list_q.append(q)
+			
+		q = Quantity.objects.filter(user=request.user)
 	except:
 		item = None
+		all_price = 0
 		if not request.user.is_anonymous:
 			cart = Cart.objects.filter(user=request.user).last()
-			i = int(cart.total)
+			item = cart.products.all()
+			all_price = 0
+			for i in item:
+				all_price += Quantity.objects.filter(user=request.user, product=i).last().quantity
+			lol = int(cart.total)
+			# Quantity.objects.get_or_create(user=request.user)
+			q = Quantity.objects.filter(user=request.user)
+			list_q = []
+			for i in item:
+				q = Quantity.objects.filter(user=request.user, product=i).last()
+				print(q)
+				list_q.append(q)
+
 		else:
 			cart = None
+			all_price = 0
 			i = None
+			lol = None
+			list_q = []
 	
-	return render(request, 'carts/view.html', {'cart': cart, 'item_total': item, 'total': i})
-
+	return render(request, 'carts/view.html', {'cart': cart.products.all(), 'item_total': lol, 'total': cart.products.all().count(), 'q': list_q})
 def send_order(request):
 	if request.user.is_superuser:
 		if request.method == 'POST':
 			if request.POST.get('submit_btn'):
-				cart = Cart.objects.filter(available=True)
+				cart = Cart.objects.filter(available=True, done=False)
 			return render(request, 'carts/orders.html', {'cart': cart})
-		cart = Cart.objects.filter(available=True)
-		return render(request, 'carts/orders.html', {'cart': cart})
+		cart = Cart.objects.filter(available=True, done=False).order_by('-id')
+		return render(request, 'carts/orders.html', {'phones': PhoneUser.objects.all(), 'cart': cart})
 	else:
 		if request.method == 'POST':
 			if request.POST.get('submit_btn'):
 				cart = Cart.objects.filter(user=request.user).last()
 				cart.available = True
 				cart.save()
-				cart = Cart.objects.filter(user=request.user).filter(available=True)
+				cart = Cart.objects.filter(user=request.user, available=True).last()
+				item = cart.products.all()
+				all_price = 0
+				
+				cart = Cart.objects.filter(user=request.user, available=True)
 				Cart.objects.create(user=request.user)
-			return render(request, 'carts/orders.html', {'cart': cart})
+			return render(request, 'carts/orders.html', {'cart': cart, 'all_price': all_price})
 		cart = Cart.objects.filter(user=request.user).filter(available=True)
-	return render(request, 'carts/orders.html', {'cart': cart})
-
+	return render(request, 'carts/orders.html', {'phones': PhoneUser.objects.all(), 'cart': cart})
+def done_cart(request, id):
+	cart = Cart.objects.filter(id=id).last()
+	cart.done = True
+	cart.save()
+	return HttpResponseRedirect(reverse('send_order'))
+@login_required
 def update_cart(request, slug):
 	if not request.user.is_anonymous:
 		cart = Cart.objects.filter(user=request.user).last()
@@ -76,16 +115,18 @@ def update_cart(request, slug):
 		if product not in cart.products.all():
 			cart.available = False
 			cart.products.add(product)
+			a = Quantity.objects.create(user=request.user, product=product)
+			cart.q.add(Quantity.objects.filter(user=request.user, product=product).last())
 
 		new_total = 0
 		for item in cart.products.all():
-			new_total += (int(item.price) * int(item.quantity))
-		
+			new_total += (int(item.price) * int(Quantity.objects.filter(user=request.user, product=item).last().quantity))
 		cart.total = new_total
 		
 		cart.save()
-	return HttpResponseRedirect(reverse('home')+ str(slug))
-
+		return HttpResponseRedirect(reverse('home')+ str(slug))
+	return HttpResponseRedirect(reverse('register'))
+@login_required
 def remove_cart(request, slug):
 	cart = Cart.objects.filter(user=request.user).last()
 	try:
@@ -96,26 +137,34 @@ def remove_cart(request, slug):
 		pass
 	if product in cart.products.all():
 		cart.products.remove(product)
+		cart.q.remove(Quantity.objects.filter(user=request.user, product=product).last())
 		new_total = 0
+
 		for item in cart.products.all():
-			new_total += (int(item.price) * int(item.quantity))		
+			new_total += (int(item.price) * int(Quantity.objects.filter(user=request.user, product=item).last().quantity))		
+
 		cart.total = new_total
 		cart.save()
 	return HttpResponseRedirect(reverse('cart'))
-
+def delete_cart(request, id):
+	cart = Cart.objects.filter(id=id)
+	cart.delete()
+	return HttpResponseRedirect(reverse('send_order'))
+@login_required
 def click_value(request, slug):
 	cart = Cart.objects.filter(user=request.user).last()
 	new_total = 0
 	for item in cart.products.all():
+		q = Quantity.objects.filter(user=request.user, product=item).last()
 		if request.POST:
 			if item.slug == slug:
 				if '_up' in request.POST:
-					print(item)
-					item.quantity += 1
-				elif '_down' in request.POST and item.quantity != 1:
-					item.quantity -= 1
-		item.save()
-		new_total += (int(item.price) * int(item.quantity))
+					q.quantity += 1
+				elif '_down' in request.POST and Quantity.objects.filter(user=request.user, product=item).last().quantity != 1:
+					q.quantity -= 1
+
+				q.save()
+		new_total += (int(item.price) * int(q.quantity))
 	cart.total = new_total
 	cart.save()
 	return HttpResponseRedirect(reverse('cart'))

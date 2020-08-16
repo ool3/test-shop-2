@@ -1,4 +1,5 @@
 {% extends 'shopway/base.html' %}
+{% block title%}{{block.super}} -> all products{% endblock %}
 {% block content %}
 <div class="pagination">
     <span class="step-links">
@@ -30,7 +31,7 @@
                     <a href="{% url 'product_detail' pr.slug %}" id="btn">
                     <div class="black-background">
                         <div class="black-text">Смотреть</div>
-                        <img src="{{pr.image.url}}" data-src="{{pr.image.url}}" style="height: 100%!important;object-fit: contain;"  class="lazyload card-img-top" alt="{{pr.image}}">
+                        <img data-src="{{pr.image.url}}" style="height: 100%!important;object-fit: contain;"  class="lazyload card-img-top" alt="{{pr.image}}">
                     </div>
                 </a>
                 <div class="card-body">
@@ -83,16 +84,16 @@
 .black-background{
     background-color: rgb(80, 71, 71);
     z-index: 20;
-    border-radius: 5px;
+    border-radius: 3px;
     position: relative;
 }
 .block-text{
     opacity: 1;
 }
-img.card-img-top.ls-is-cached.lazyloaded{
+img.card-img-top{
     transition: 1s;
 }
-img.card-img-top.ls-is-cached.lazyloaded:hover{
+img.card-img-top:hover{
     opacity: 0.1;
 
 }
@@ -151,7 +152,6 @@ img.card-img-top.ls-is-cached.lazyloaded:hover{
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
-console.log(numberWithCommas(document.getElementById('price').textContent));
 a = document.querySelectorAll('#price');
 for (item of a){
     console.log(item.textContent)

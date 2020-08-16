@@ -33,7 +33,9 @@ def search(request):
 		products = Product.objects.filter(country__in=q)
 	if not products:
 		products = Product.objects.filter(name__icontains=q.capitalize()[:4])
-	return render(request, 'shopway/search_elements.html', {'products': products, 'q': q})
+	cart = Cart.objects.filter(user=request.user).last()
+	c = cart.products.count()
+	return render(request, 'shopway/search_elements.html', {'products': products, 'q': q, 'total': c})
 
 def get_user(request):
 	try:
@@ -55,7 +57,9 @@ def about_as(request):
 	return render(request, 'shopway/about.html', {'total': total, 'all': all_product})
 
 def category_all(request):
-	return render(request, 'shopway/category_all.html')
+	cart = Cart.objects.filter(user=request.user).last()
+	context = cart.products.count()
+	return render(request, 'shopway/category_all.html', {'total': context})
 
 class ProductsAll(ListView):
 	model = Product
@@ -65,7 +69,6 @@ class ProductsAll(ListView):
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
-		print(self.kwargs)
 		try:
 			context['total'] = get_user(self.request).products.count()
 		except:
