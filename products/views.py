@@ -2,6 +2,7 @@ from django.shortcuts import render, reverse
 from django.views.generic import ListView, DetailView
 from .models import Category, Product
 from carts.models import Cart
+from django.http import HttpResponse, HttpResponseRedirect
 import requests
 from bs4 import BeautifulSoup as BS
 from django.core.paginator import Paginator
@@ -20,6 +21,8 @@ def home(request):
 		category = None
 	return render(request, 'shopway/home.html', {'btn_name': name_button, 'total': context, 'category': category})
 	
+
+
 
 def search(request):
 	try:

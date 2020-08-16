@@ -28,12 +28,13 @@ urlpatterns = [
     path('registration/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('products/carts/', view, name='cart'),
     path('products/carts/all/', send_order, name='send_order'),
+    path('products/carts/update_price/', update_price, name='update_price'),
     path('products/carts/<slug:slug>/', update_cart, name='update_cart'),
     path('products/carts/<slug:slug>/delete', remove_cart, name='remove_cart'),
     path('products/carts/<slug:slug>/click_value', click_value, name='click_value'),
     path('products/carts/<int:id>/delete_cart/', delete_cart, name='delete_cart'),
     path('products/carts/<int:id>/done_cart/', done_cart, name='done_cart'),
-
+    
     
     
 
