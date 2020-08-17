@@ -173,18 +173,22 @@ def click_value(request, slug):
 
 
 def update_price(request):
-	r = requests.get(f'https://cbr.ru/')
-	html = BS(r.content, 'html.parser')
-	base_page = html.select('.row.flex-nowrap.home-indicators_items')
-	for page in base_page:
-		page_block = page.select('.indicator_el.indicator_course')
-	counter = 0
-	for block in page_block:
-		if counter == 1:
-			euro = [i.text[:-1] for i in block.select('.indicator_el_value.mono-num')]
-			number_euro = float(euro[-1].replace(',', '.'))
-		counter += 1
-	for product in Product.objects.all():
-		product.price = product.price_multiplier * number_euro
-		product.save()
+	try:
+		r = requests.get(f'https://cbr.ru/')
+		html = BS(r.content, 'html.parser')
+		base_page = html.select('.row.flex-nowrap.home-indicators_items')
+		for page in base_page:
+			page_block = page.select('.indicator_el.indicator_course')
+		counter = 0
+		for block in page_block:
+			if counter == 1:
+				euro = [i.text[:-1] for i in block.select('.indicator_el_value.mono-num')]
+				number_euro = float(euro[-1].replace(',', '.'))
+			counter += 1
+		for product in Product.objects.all():
+			product.price = product.price_multiplier * number_euro
+			product.save()
+	except requests.exceptions.ConnectionError:
+		r = requests.get(f'https://cbr.ru/')
+		r.status_code = "Connection refused"
 	return HttpResponseRedirect(reverse('cart'))
