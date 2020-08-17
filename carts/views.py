@@ -176,43 +176,17 @@ def click_value(request, slug):
 
 
 def update_price(request):
-	try:
-		# session = requests.Session()
-		# retry = Retry(connect=3, backoff_factor=0.5)
-		# adapter = HTTPAdapter(max_retries=retry)
-		# session.mount('http://', adapter)
-		# session.mount('https://', adapter)
-
-		# session.get(url)
-		username = 'kefjfhjsf'
-		token = '1c4ea174d54d1362538bfe9e9ee9d78f406d6d54'
-
-		response = requests.get(
-		'https://www.pythonanywhere.com/api/v0/user/{username}/cpu/'.format(
-			username=username
-		),
-		headers={'Authorization': 'Token {token}'.format(token=token)}
-		)
-		if response.status_code == 200:
-			print('CPU quota info:')
-			print(response.content)
-		else:
-			print('Got unexpected status code {}: {!r}'.format(response.status_code, response.content))		
-		r = requests.get(f'https://cbr.ru/')
-		html = BS(r.content, 'html.parser')
-		base_page = html.select('.row.flex-nowrap.home-indicators_items')
-		for page in base_page:
-			page_block = page.select('.indicator_el.indicator_course')
-		counter = 0
-		for block in page_block:
-			if counter == 1:
-				euro = [i.text[:-1] for i in block.select('.indicator_el_value.mono-num')]
-				number_euro = float(euro[-1].replace(',', '.'))
-			counter += 1
-		for product in Product.objects.all():
-			product.price = product.price_multiplier * number_euro
-			product.save()
-	except requests.exceptions.ConnectionError:
-		r = requests.get(f'https://cbr.ru/')
-		r.status_code = "Connection refused"
+	r = requests.get(f'https://yandex.ru/search/?text=курс%20евро&lr=121724&clid=2270455&win=449&src=suggest_B')
+	html = BS(r.content, 'html.parser')
+	base_page = html.select('.main__center')
+	for page in base_page:
+		all_current = page.find('div', class_='content__left').find('ul', class_='serp-list').find_all('div', class_='converter-form__container')
+	counter = 0
+	for current in all_current:
+		if counter != 0:
+			number_euro = current.find('span', class_='input').find('span', class_='input__box').find('input').get('value').replace(',', '.')
+		counter += 1
+	for product in Product.objects.all():
+		product.price = product.price_multiplier * float(number_euro)
+		product.save()
 	return HttpResponseRedirect(reverse('cart'))
