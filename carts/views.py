@@ -206,11 +206,11 @@ def update_price(request):
 		base_page = html.select('.row.flex-nowrap.home-indicators_items')
 		time.sleep(100)
 		for page in base_page:
-			time.sleep(1)
+			time.sleep(30)
 			page_block = page.select('.indicator_el.indicator_course')
 		counter = 0
 		for block in page_block:
-			time.sleep(1)
+			time.sleep(30)
 			if counter == 1:
 				euro = [i.text[:-1] for i in block.select('.indicator_el_value.mono-num')]
 				number_euro = float(euro[-1].replace(',', '.'))
