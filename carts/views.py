@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup as BS
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from registration.models import PhoneUser
+import time
 # Create your views here.
 
 
@@ -196,14 +197,20 @@ def update_price(request):
 			print('CPU quota info:')
 			print(response.content)
 		else:
-			print('Got unexpected status code {}: {!r}'.format(response.status_code, response.content))		
+			print('Got unexpected status code {}: {!r}'.format(response.status_code, response.content))
+		time.sleep(1000)		
 		r = requests.get(f'https://cbr.ru/')
+		time.sleep(1000)
 		html = BS(r.content, 'html.parser')
+		time.sleep(1000)
 		base_page = html.select('.row.flex-nowrap.home-indicators_items')
+		time.sleep(1000)
 		for page in base_page:
+			time.sleep(1000)
 			page_block = page.select('.indicator_el.indicator_course')
 		counter = 0
 		for block in page_block:
+			time.sleep(1000)
 			if counter == 1:
 				euro = [i.text[:-1] for i in block.select('.indicator_el_value.mono-num')]
 				number_euro = float(euro[-1].replace(',', '.'))
