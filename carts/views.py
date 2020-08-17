@@ -197,20 +197,14 @@ def update_price(request):
 			print('CPU quota info:')
 			print(response.content)
 		else:
-			print('Got unexpected status code {}: {!r}'.format(response.status_code, response.content))
-		time.sleep(100)		
+			print('Got unexpected status code {}: {!r}'.format(response.status_code, response.content))		
 		r = requests.get(f'https://cbr.ru/')
-		time.sleep(100)
 		html = BS(r.content, 'html.parser')
-		time.sleep(100)
 		base_page = html.select('.row.flex-nowrap.home-indicators_items')
-		time.sleep(100)
 		for page in base_page:
-			time.sleep(30)
 			page_block = page.select('.indicator_el.indicator_course')
 		counter = 0
 		for block in page_block:
-			time.sleep(30)
 			if counter == 1:
 				euro = [i.text[:-1] for i in block.select('.indicator_el_value.mono-num')]
 				number_euro = float(euro[-1].replace(',', '.'))
