@@ -176,13 +176,27 @@ def click_value(request, slug):
 
 def update_price(request):
 	try:
-		session = requests.Session()
-		retry = Retry(connect=3, backoff_factor=0.5)
-		adapter = HTTPAdapter(max_retries=retry)
-		session.mount('http://', adapter)
-		session.mount('https://', adapter)
+		# session = requests.Session()
+		# retry = Retry(connect=3, backoff_factor=0.5)
+		# adapter = HTTPAdapter(max_retries=retry)
+		# session.mount('http://', adapter)
+		# session.mount('https://', adapter)
 
-		session.get(url)
+		# session.get(url)
+		username = 'kefjfhjsf'
+		token = '1c4ea174d54d1362538bfe9e9ee9d78f406d6d54'
+
+		response = requests.get(
+		'https://www.pythonanywhere.com/api/v0/user/{username}/cpu/'.format(
+			username=username
+		),
+		headers={'Authorization': 'Token {token}'.format(token=token)}
+		)
+		if response.status_code == 200:
+			print('CPU quota info:')
+			print(response.content)
+		else:
+			print('Got unexpected status code {}: {!r}'.format(response.status_code, response.content))		
 		r = requests.get(f'https://cbr.ru/')
 		html = BS(r.content, 'html.parser')
 		base_page = html.select('.row.flex-nowrap.home-indicators_items')
