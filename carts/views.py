@@ -5,6 +5,8 @@ from .models import Cart
 from products.models import Product, Category, Quantity
 from django.http import HttpResponse, HttpResponseRedirect
 import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 from bs4 import BeautifulSoup as BS
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -174,6 +176,13 @@ def click_value(request, slug):
 
 def update_price(request):
 	try:
+		session = requests.Session()
+		retry = Retry(connect=3, backoff_factor=0.5)
+		adapter = HTTPAdapter(max_retries=retry)
+		session.mount('http://', adapter)
+		session.mount('https://', adapter)
+
+		session.get(url)
 		r = requests.get(f'https://cbr.ru/')
 		html = BS(r.content, 'html.parser')
 		base_page = html.select('.row.flex-nowrap.home-indicators_items')
