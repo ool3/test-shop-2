@@ -17,13 +17,13 @@ import time
 
 @login_required
 def view(request):
-	# for x in range(1, 14):
-	# 	r = requests.get(f'https://eco-dush.ru/brands/armani-roca/?PAGEN_1={x}&SIZEN_1=36').text
-	# 	soup = BS(r, 'lxml')
+	# for x in range(1, 48):
+	# 	r = requests.get(f'https://eco-dush.ru/brands/duravit/?PAGEN_1={x}&SIZEN_1=36').text
+	# 	soup = BS(r, 'html.parser')
 	# 	items = soup.find_all('div', class_='col-md-3 product-card')
 	# 	counter = 5
 	# 	for item in items:
-	# 		counter += 4 * x
+	# 		counter += 3 * x
 	# 		country = item.find('div', class_='products-carousel-el-top').find('span', class_='country').text
 	# 		img = 'https://eco-dush.ru/' + item.find('div', class_='products-carousel-el-img').find('img').get('src')
 	# 		text = item.find('div', class_='products-carousel-el-title').text.strip()
@@ -33,7 +33,7 @@ def view(request):
 	# 		with open(name, 'bw') as f:
 	# 			for chunk in r.iter_content(8192):
 	# 				f.write(chunk)
-	# 		prod = Product(id=counter, name=text, slug='-'.join(('a').lower() + str(counter)), image=name,country=country, price=int(price), stock=1)
+	# 		prod = Product(id=counter, name=text, slug='-'.join(('by_as').lower() + str(counter)), image=name,country=country, price=int(price), stock=1)
 	# 		prod.save()
 
 	try:
@@ -176,6 +176,9 @@ def click_value(request, slug):
 
 
 def update_price(request):
+	# for product in Product.objects.filter(price_multiplier=0):
+	# 	product.price_multiplier = product.price / 87.2
+	# 	product.save()
 	r = requests.get(f'https://yandex.ru/search/?text=курс%20евро&lr=121724&clid=2270455&win=449&src=suggest_B')
 	html = BS(r.content, 'html.parser')
 	base_page = html.select('.main__center')
