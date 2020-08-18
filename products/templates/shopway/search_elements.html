@@ -2,25 +2,6 @@
 {% block title%}{{block.super}} -> {{q}}{% endblock %}
 {% block content %}
 {% if products%}
-<div class="pagination">
-    <span class="step-links">
-        {% if contacts.has_previous %}
-            <a href="?page=1" class="btn btn-warning">&laquo; в начало</a>
-        {% endif %}
-        {% for num in page_obj.paginator.page_range %}
-            {% if contacts.number == num %}
-                <a class="btn btn-light" href="?page={{num}}">{{num}}</a>
-                {% elif num > contacts.number|add:'-8' and num < contacts.number|add:'8' %}
-                <a class="btn btn-outline-light" href="?page={{num}}">{{num}}</a>
-            {% endif %}
-        {% endfor %}
-
-
-        {% if contacts.has_next %}
-            <a href="?page={{ contacts.paginator.num_pages }}" class="btn btn-warning">в конец &raquo;</a>
-        {% endif %}
-    </span>
-</div>
 <div class="container-fluid">
   <div id="content" class="row row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
   {% for pr in products %}
