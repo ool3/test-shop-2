@@ -176,20 +176,36 @@ def click_value(request, slug):
 
 
 def update_price(request):
-	for product in Product.objects.filter(price_multiplier=0):
-		product.price_multiplier = product.price / 87.2
-		product.save()
-	# r = requests.get(f'https://yandex.ru/search/?text=курс%20евро&lr=121724&clid=2270455&win=449&src=suggest_B')
-	# html = BS(r.content, 'html.parser')
-	# base_page = html.select('.main__center')
-	# for page in base_page:
-	# 	all_current = page.find('div', class_='content__left').find('ul', class_='serp-list').find_all('div', class_='converter-form__container')
-	# counter = 0
-	# for current in all_current:
-	# 	if counter != 0:
-	# 		number_euro = current.find('span', class_='input').find('span', class_='input__box').find('input').get('value').replace(',', '.')
-	# 	counter += 1
-	# for product in Product.objects.all():
-	# 	product.price = product.price_multiplier * float(number_euro)
+	# for product in Product.objects.filter(price_multiplier=0):
+	# 	product.price_multiplier = product.price / 87.2
 	# 	product.save()
+	# all_prod = []
+	# for product in Product.objects.all():
+	# 	if product.name in all_prod:
+	# 		product.delete()
+	# 	else:
+	# 		all_prod.append(product.name)
+	# print(all_prod)
+	r = requests.get(f'https://yandex.ru/search/?text=курс%20евро&lr=121724&clid=2270455&win=449&src=suggest_B')
+	html = BS(r.content, 'html.parser')
+	base_page = html.select('.main__center')
+	all_current = None
+	number_euro = ''
+	for page in base_page:
+		all_current = page.find('div', class_='content__left').find('ul', class_='serp-list').find_all('div', class_='converter-form__container')
+		counter = 0
+		for current in all_current:
+			if counter != 0:
+				number_euro = current.find('span', class_='input').find('span', class_='input__box').find('input').get('value').replace(',', '.')
+				print(number_euro)
+			counter += 1
+	for product in Product.objects.all():
+		print(number_euro)
+		print(product)
+		try:
+			product.price = product.price_multiplier * float(number_euro)
+			product.save()
+		except:
+			product.price_multiplier = product.price / float(number_euro)
+			product.save()
 	return HttpResponseRedirect(reverse('cart'))
