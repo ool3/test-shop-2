@@ -61,7 +61,7 @@ def about_as(request):
 	except:
 		cart = None
 		total = None
-		all_product = None
+		all_product = Product.objects.all().count()
 	
 	return render(request, 'shopway/about.html', {'total': total, 'all': all_product})
 
