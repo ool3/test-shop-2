@@ -25,8 +25,21 @@
 
 <body>
 <div class="page">
-	<div class="container">
-	{% include 'shopway/includes/navbar.html' %}
+	<div class="navbar-no-fixed">
+		<div class="container">
+			{% include 'shopway/includes/navbar.html' %}
+			<div class="header-fixed-bar">
+				<div class="header-company">
+					<a href="{% url 'home' %}">Alex Company</a>
+				</div>
+				<nav class="nav-fixed">
+				  <a href="{% url 'about_as' %}" class="nav-fixed-link">О нас</a>
+				  <a href="{% url 'category_all' %}" class="nav-fixed-link">Категории</a>
+				  <a href="{% url 'products' %}" class="nav-fixed-link">Товары</a>
+				  <a href="{% url 'cart' %}" class="nav-fixed-link">Корзина</a>
+				</nav>
+			  </div>
+		</div>
 	</div>
 	<div class="data-content">
 		{% block content %}
@@ -51,8 +64,9 @@
 
 </body>
 <style>
-	body{
-		overflow-x: hidden;
+
+body{
+	overflow-x: hidden;
 	}
 .about .col a{
 	color: rebeccapurple;
@@ -127,10 +141,83 @@
 .row{
 	justify-content: center;
 }
+.header-fixed-bar{
+	display: none;
+	font-family: monospace;
+	font-size: 20px;
+	display: none;	
+}
+.nav-fixed{
+	margin-right: 20px;
+}
+.nav-fixed > a{
+	color: #f8f8f894;
+    text-decoration: none;
+    height: 188px!important;
+    width: 100%;
+    padding: 31px;
+	transition: 0.5s ease-in;
+}
+.nav-fixed > a:hover{
+	color: black;
+	background-color: #f7f7f7;
+	height: 100%;
+	box-shadow: inset 0px 0px 6px 0px black;
+}
+.navbar-fixed{
+	top: 0;
+    left: 0;
+    z-index: 9999;
+    display: flex;
+    padding: 10px 0;
+    background: #4f4a4a;
+    animation-name: show_header;
+    animation-duration: 1s;
+    position: fixed;
+    width: 100%;
+    justify-content: flex-end;
+	padding: 28px 0;
+	justify-content: space-between;
+}
+.header-company{
+	margin-left: 20px;
+	color: white;
+}
+.header-company > a{
+	color: white;
+	text-decoration: none;
+	transition: 0.8s ease-in;
+}
+.header-company > a:hover{
+	text-shadow: 4px 3px black;
+}
+@keyframes show_header {
+	0%{
+		opacity: 0;
+		top: -70px;
+
+	}
+
+	100%{
+		opacity: 1;
+		top: 0;
+	}
+}
 </style>
 <script src='{% static "js/card.js" %}'></script>
 <script src='{% static "js/home.js" %}'></script>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script>
+window.onscroll = function showHeader(){
+	let header = document.querySelector('.header-fixed-bar')
+	if (window.pageYOffset > 200){
+		header.setAttribute('style', 'display: flex;')
+		header.classList.add('navbar-fixed')
+	}else{
+		header.classList.remove('navbar-fixed')
+	}
+}
+</script>
 </html>

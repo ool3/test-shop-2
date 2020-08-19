@@ -36,9 +36,15 @@ def search(request):
 		products = Product.objects.filter(country__in=q)
 	if not products:
 		products = Product.objects.filter(name__icontains=q.capitalize()[:4])
-	cart = Cart.objects.filter(user=request.user).last()
-	c = cart.products.count()
-	return render(request, 'shopway/search_elements.html', {'products': products, 'q': q, 'total': c})
+	print(products)
+
+	if not request.user.is_anonymous: 
+		cart = Cart.objects.filter(user=request.user).last()
+		c = cart.products.count()
+		return render(request, 'shopway/search_elements.html', {'products': products, 'q': q, 'total': c})
+
+	else:
+		return render(request, 'shopway/search_elements.html', {'products':products, 'q': q})
 
 def get_user(request):
 	try:
@@ -60,10 +66,12 @@ def about_as(request):
 	return render(request, 'shopway/about.html', {'total': total, 'all': all_product})
 
 def category_all(request):
-	cart = Cart.objects.filter(user=request.user).last()
-	context = cart.products.count()
-	return render(request, 'shopway/category_all.html', {'total': context})
-
+	if not request.user.is_anonymous: 
+		cart = Cart.objects.filter(user=request.user).last()
+		context = cart.products.count()
+		return render(request, 'shopway/category_all.html', {'total': context})
+	else:
+		return render(request, 'shopway/category_all.html')
 class ProductsAll(ListView):
 	model = Product
 	template_name = 'shopway/product_list.html'

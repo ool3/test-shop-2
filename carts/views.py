@@ -179,13 +179,13 @@ def update_price(request):
 	# for product in Product.objects.filter(price_multiplier=0):
 	# 	product.price_multiplier = product.price / 87.2
 	# 	product.save()
-	# all_prod = []
-	# for product in Product.objects.all():
-	# 	if product.name in all_prod:
-	# 		product.delete()
-	# 	else:
-	# 		all_prod.append(product.name)
-	# print(all_prod)
+	all_prod = []
+	for product in Product.objects.all():
+		if product.name in all_prod:
+			product.delete()
+		else:
+			all_prod.append(product.name)
+	print(all_prod)
 	r = requests.get(f'https://yandex.ru/search/?text=курс%20евро&lr=121724&clid=2270455&win=449&src=suggest_B')
 	html = BS(r.content, 'html.parser')
 	base_page = html.select('.main__center')
