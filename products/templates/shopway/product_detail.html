@@ -17,8 +17,8 @@
 		{% endif %}
 		<p id="p"><span id="country">Страна</span>&nbsp; {{details.country}}</p><br>
 		<p id="p" class="price-color"><span id="country">Цена </span><span id="price">&nbsp;{{details.price}}</span></p><br>
-		<a href="#" id="back" class="btn btn-light">
-   	<i class="fa fa-undo">назад</i>
+		<a href="#" id="back" class="btn btn-light go">
+			<i class="fa fa-undo">назад</i>
 		</a>
 	
 	</div>
@@ -31,8 +31,8 @@
 	padding: 14px;
 	border-radius: 5px;
     display: flex;
-    font: -webkit-small-control;
     justify-content: center;
+	border: 1px solid black;
 
 }
 .red{
@@ -86,8 +86,9 @@
 	}
 }
 @media screen  and (max-width: 1024px){
-	.btn-light{
+	.go{
 		width: 100%;
+		margin-bottom: 3em;
 	}
 }
 @media (min-width: 768px){
