@@ -147,6 +147,9 @@ body{
 	font-size: 20px;
 	display: none;	
 }
+.header-fixed-bar > *{
+	display: none;
+}
 .nav-fixed{
 	margin-right: 20px;
 }
@@ -212,11 +215,19 @@ body{
 <script>
 window.onscroll = function showHeader(){
 	let header = document.querySelector('.header-fixed-bar')
+	let in_header = document.querySelectorAll('.header-fixed-bar > *')
 	if (window.pageYOffset > 200){
 		header.setAttribute('style', 'display: flex;')
+		for (let element of in_header){
+			element.setAttribute('style', 'display: block;')
+		}
+		
 		header.classList.add('navbar-fixed')
 	}else{
 		header.classList.remove('navbar-fixed')
+		for (let element of in_header){
+			element.setAttribute('style', 'display: none;')
+		}
 	}
 }
 </script>
