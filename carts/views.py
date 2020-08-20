@@ -35,6 +35,9 @@ def view(request):
 	# 				f.write(chunk)
 	# 		prod = Product(id=counter, name=text, slug=''.join(('Trustold').lower() + str(counter)), image=name,country=country, price=int(price), stock=1)
 	# 		prod.save()
+	for product in Product.objects.all():
+		if product.price == 0:
+			product.delete()
 
 	try:
 		a = Cart.objects.get_or_create(user=request.user)
@@ -181,7 +184,7 @@ def update_price(request):
 	# 	product.save()
 	all_prod = []
 	for product in Product.objects.all():
-		if product.name in all_prod:
+		if product.name in all_prod or int(product.price) == 0:
 			product.delete()
 		else:
 			all_prod.append(product.name)
@@ -199,10 +202,10 @@ def update_price(request):
 				print(number_euro)
 			counter += 1
 	for product in Product.objects.all():
-		try:
+		if product.price_multiplier:
 			product.price = product.price_multiplier * float(number_euro)
 			product.save()
-		except:
+		else:
 			product.price_multiplier = product.price / float(number_euro)
 			product.save()
 	return HttpResponseRedirect(reverse('cart'))
