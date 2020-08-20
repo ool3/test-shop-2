@@ -199,7 +199,6 @@ def update_price(request):
 		for current in all_current:
 			if counter != 0:
 				number_euro = current.find('span', class_='input').find('span', class_='input__box').find('input').get('value').replace(',', '.')
-				print(number_euro)
 			counter += 1
 	for product in Product.objects.all():
 		if product.price_multiplier:
@@ -208,4 +207,4 @@ def update_price(request):
 		else:
 			product.price_multiplier = product.price / float(number_euro)
 			product.save()
-	return HttpResponseRedirect(reverse('cart'))
+	return HttpResponseRedirect(reverse('send_order'))

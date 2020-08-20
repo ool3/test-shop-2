@@ -29,7 +29,9 @@ def search(request):
 		q = request.GET.get('q')
 	except:
 		q = None
-	products = Product.objects.filter(name__icontains=q.capitalize())
+	products = Product.objects.filter(name=q)
+	if not products:
+		products = Product.objects.filter(name__icontains=q.capitalize())
 	if not products:
 		products = Product.objects.filter(country__icontains=q.capitalize())
 	if not products:
