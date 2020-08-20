@@ -4,25 +4,20 @@
 
 <div class="container">
 	<div class="row">
-		<div class="col-xl-6 col-lg-7" style="display: flex; align-items: center;justify-content: center;">
+		<div class="col-xl-6 col-lg-7 img-justify" style="display: flex;justify-content: left;">
 			<img id="im" src="{{details.image.url}}" alt="">
 		</div>
 	
-		<div class="col-xl-6 col-lg-3">
+		<div class="col-xl-6 col-lg-6">
 		<h2>{{details.name}}</h2><p id="description">{{details.description}}</p>
 		{% if cart %}
-			<p class="btn btn-light btn-sm" disabled style="    background-color: #e7aaaa;;
-    padding: 10px;
-    border-radius: 5px;
-    display: flex;
-    font: -webkit-small-control;
-    justify-content: center;">Товар не добавлен</p>
+			<p class="btn btn-light btn-sm product-style red" disabled>Товар не добавлен</p>
 		{% else %}
-			<a href="{% url 'cart' %}"><p id="cart-has" class="btn btn-light btn-sm" disabled>Товар добавлен</p></a>
+			<a href="{% url 'cart' %}"><p id="cart-has" class="btn btn-light btn-sm product-style light" disabled>Товар добавлен</p></a>
 		{% endif %}
 		<p id="p"><span id="country">Страна</span>&nbsp; {{details.country}}</p><br>
-		<p id="p" class="gold"><span id="country">Цена </span><span id="price">&nbsp;{{details.price}}</span></p><br>
-		<a href="#" id="back" class="btn btn-primary">
+		<p id="p" class="price-color"><span id="country">Цена </span><span id="price">&nbsp;{{details.price}}</span></p><br>
+		<a href="#" id="back" class="btn btn-light">
    	<i class="fa fa-undo">назад</i>
 		</a>
 	
@@ -31,8 +26,23 @@
 </div>
 	
 <style>
-	.gold{
-		background: gold!important;
+.product-style{
+	margin-bottom: 3em;
+	padding: 14px;
+	border-radius: 5px;
+    display: flex;
+    font: -webkit-small-control;
+    justify-content: center;
+
+}
+.red{
+	background-color: #e7aaaa;;
+}
+.light{
+	background-color: #c3dfbf;
+}
+	.price-color{
+		background: #bebcb3!important;
 		border: 1px solid black;
 	}
 @media screen and (max-width: 1199px){
@@ -53,7 +63,7 @@
 		margin-bottom: 1rem;
 		display: flex;
 		/* float: right; */
-		background: gainsboro;
+		background: #efe6e6;
 		padding: 10px;
 		border-radius: 5px;
 		justify-content: center;
@@ -61,6 +71,9 @@
 	}
 
 @media(max-width: 991px){
+	.img-justify{
+		justify-content: center;
+	}
 	h2{
 		font-size: 2rem;
 		margin-bottom: 4%;
@@ -73,7 +86,7 @@
 	}
 }
 @media screen  and (max-width: 1024px){
-	.btn-primary{
+	.btn-light{
 		width: 100%;
 	}
 }
@@ -88,15 +101,10 @@
 }
 </style>
 <script>
-	if ($('#buttonAdd').clicked == true){
-		$('#back').on('click', function(){
-			window.history.go(-2);
-	});
-	}else{
-		$('#back').on('click', function(){
-			window.history.go(-1);
-	});
-	}
+$('#back').on('click', function(){
+	window.history.go(-1);
+});
+
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
