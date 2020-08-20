@@ -185,7 +185,6 @@ def update_price(request):
 			product.delete()
 		else:
 			all_prod.append(product.name)
-	print(all_prod)
 	r = requests.get(f'https://yandex.ru/search/?text=курс%20евро&lr=121724&clid=2270455&win=449&src=suggest_B')
 	html = BS(r.content, 'html.parser')
 	base_page = html.select('.main__center')
@@ -200,8 +199,6 @@ def update_price(request):
 				print(number_euro)
 			counter += 1
 	for product in Product.objects.all():
-		print(number_euro)
-		print(product)
 		try:
 			product.price = product.price_multiplier * float(number_euro)
 			product.save()
