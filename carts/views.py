@@ -17,24 +17,24 @@ import time
 
 @login_required
 def view(request):
-	for x in range(1, 6):
-		r = requests.get(f'https://eco-dush.ru/brands/toto/?PAGEN_1={x}&SIZEN_1=36').text
-		soup = BS(r, 'html.parser')
-		items = soup.find_all('div', class_='col-md-3 product-card')
-		counter = 29
-		for item in items:
-			counter += 700 * x
-			country = item.find('div', class_='products-carousel-el-top').find('span', class_='country').text
-			img = 'https://eco-dush.ru/' + item.find('div', class_='products-carousel-el-img').find('img').get('src')
-			text = item.find('div', class_='products-carousel-el-title').text.strip()
-			price = item.find('span', class_='products-carousel-el-price-1').text.replace(' ', '')
-			r = requests.get(img, stream=True)
-			name = str(counter) + img.split('/')[-1]
-			with open(name, 'bw') as f:
-				for chunk in r.iter_content(8192):
-					f.write(chunk)
-			prod = Product(id=counter, name=text, slug='-'.join(('Trustold').lower() + str(counter)), image=name,country=country, price=int(price), stock=1)
-			prod.save()
+	# for x in range(1, 8):
+	# 	r = requests.get(f'https://eco-dush.ru/brands/devon-devon/?PAGEN_1={x}&SIZEN_1=180').text
+	# 	soup = BS(r, 'html.parser')
+	# 	items = soup.find_all('div', class_='col-md-3 product-card')
+	# 	counter = 40
+	# 	for item in items:
+	# 		counter += 1500 * x
+	# 		country = item.find('div', class_='products-carousel-el-top').find('span', class_='country').text
+	# 		img = 'https://eco-dush.ru/' + item.find('div', class_='products-carousel-el-img').find('img').get('src')
+	# 		text = item.find('div', class_='products-carousel-el-title').text.strip()
+	# 		price = item.find('span', class_='products-carousel-el-price-1').text.replace(' ', '')
+	# 		r = requests.get(img, stream=True)
+	# 		name = str(counter) + img.split('/')[-1]
+	# 		with open(name, 'bw') as f:
+	# 			for chunk in r.iter_content(8192):
+	# 				f.write(chunk)
+	# 		prod = Product(id=counter, name=text, slug=''.join(('Trustold').lower() + str(counter)), image=name,country=country, price=int(price), stock=1)
+	# 		prod.save()
 
 	try:
 		a = Cart.objects.get_or_create(user=request.user)
