@@ -182,7 +182,7 @@ def update_price(request):
 	# 	product.save()
 	all_prod = []
 	for product in Product.objects.all():
-		if product.name in all_prod or int(product.price) == 0:
+		if product.name in all_prod or int(product.price) == 0 or not product.image:
 			product.delete()
 		else:
 			all_prod.append(product.name)
